@@ -11,18 +11,14 @@ import java.util.List;
 public class PriceCalculator {
     public static BigDecimal sumAllEuroPrices(List<Product> productList, List<Currency> currencies) throws ArithmeticException {
         BigDecimal sum = BigDecimal.ZERO;
-        for (int i = 0; i < productList.size(); i++) {
-            String productCurrency = productList.get(i).getCurrency();
-            for (int j = 0; j < currencies.size(); j++) {
-                String currencyName = currencies.get(j).getName();
-                if (productCurrency.equals(currencyName)) {
-                    BigDecimal productPrice = productList.get(i).getPrice();
-                    BigDecimal currenyValue = currencies.get(j).getValue();
-                    sum = sum.add(productPrice.divide(currenyValue, 16, RoundingMode.HALF_UP));
-                    break;
-                }
-            }
+        for (Product product : productList) {
+            Currency equalsCurrency = findCurrencyFor(product, currencies);
+            BigDecimal productPrice = product.getPrice();
+            BigDecimal currenyValue = equalsCurrency.getValue();
+            sum = sum.add(productPrice.divide(currenyValue, 16, RoundingMode.HALF_UP));
+//                }
         }
+//        }
         return sum;
     }
 
@@ -33,20 +29,25 @@ public class PriceCalculator {
 
     public static List<Product> createEuroProducts(List<Product> productList, List<Currency> currencies) throws ArithmeticException {
         List<Product> euroProductList = new ArrayList<>();
-        for (int i = 0; i < productList.size(); i++) {
-            String productCurrency = productList.get(i).getCurrency();
-            for (int j = 0; j < currencies.size(); j++) {
-                String currencyName = currencies.get(j).getName();
-                if (productCurrency.equals(currencyName)) {
-                    BigDecimal productPrice = productList.get(i).getPrice();
-                    BigDecimal currenyValue = currencies.get(j).getValue();
-                    BigDecimal euroPrice = productPrice.divide(currenyValue, 16, RoundingMode.HALF_UP);
-                    Product product = new Product(productList.get(i).getName(), euroPrice, "EUR");
-                    euroProductList.add(product);
-                    break;
-                }
-            }
+        for (Product value : productList) {
+            Currency equalsCurrency = findCurrencyFor(value, currencies);
+            BigDecimal productPrice = value.getPrice();
+            BigDecimal currenyValue = equalsCurrency.getValue();
+            BigDecimal euroPrice = productPrice.divide(currenyValue, 16, RoundingMode.HALF_UP);
+            Product product = new Product(value.getName(), euroPrice, "EUR");
+            euroProductList.add(product);
         }
         return euroProductList;
+    }
+
+    private static Currency findCurrencyFor(Product product, List<Currency> currencies) {
+        for (Currency currency : currencies) {
+            String currencyName = currency.getName();
+            String productCurrency = product.getCurrency();
+            if (productCurrency.equals(currencyName)) {
+                return currency;
+            }
+        }
+        return null;
     }
 }

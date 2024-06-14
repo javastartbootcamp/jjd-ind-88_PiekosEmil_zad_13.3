@@ -8,31 +8,31 @@ public class ProductFinder {
 
     public static void findTheMostExpensive(List<Product> euroProductList) {
         BigDecimal largest = BigDecimal.ZERO;
-        int largestProductIndex = 0;
-        for (int i = 0; i < euroProductList.size(); i++) {
-            BigDecimal euroProductPrice = euroProductList.get(i).getPrice();
-            if (euroProductPrice.doubleValue() > largest.doubleValue()) {
-                largest = euroProductList.get(i).getPrice();
-                largestProductIndex = i;
+        Product mostExpensiveProduct = null;
+        for (Product product : euroProductList) {
+            BigDecimal euroProductPrice = product.getPrice();
+            if (euroProductPrice.compareTo(largest) > 0) {
+                largest = product.getPrice();
+                mostExpensiveProduct = product;
             }
         }
-        System.out.printf("Najdroższy produkt to: %s %.2f %s", euroProductList.get(largestProductIndex).getName(),
-                euroProductList.get(largestProductIndex).getPrice(), euroProductList.get(largestProductIndex).getCurrency());
+        System.out.printf("Najdroższy produkt to: %s %.2f %s", mostExpensiveProduct.getName(),
+                mostExpensiveProduct.getPrice(), mostExpensiveProduct.getCurrency());
         System.out.println();
     }
 
     public static void findTheCheapest(List<Product> euroProductList) {
         BigDecimal smallest = BigDecimal.valueOf(Integer.MAX_VALUE);
-        int largestProductIndex = 0;
-        for (int i = 0; i < euroProductList.size(); i++) {
-            BigDecimal euroProductPrice = euroProductList.get(i).getPrice();
-            if (euroProductPrice.doubleValue() < smallest.doubleValue()) {
-                smallest = euroProductList.get(i).getPrice();
-                largestProductIndex = i;
+        Product cheapestProduct = null;
+        for (Product product : euroProductList) {
+            BigDecimal euroProductPrice = product.getPrice();
+            if (euroProductPrice.compareTo(smallest) < 0) {
+                smallest = product.getPrice();
+                cheapestProduct = product;
             }
         }
-        System.out.printf("Najtańszy produkt to: %s %.2f %s", euroProductList.get(largestProductIndex).getName(),
-                euroProductList.get(largestProductIndex).getPrice(), euroProductList.get(largestProductIndex).getCurrency());
+        System.out.printf("Najtańszy produkt to: %s %.2f %s", cheapestProduct.getName(),
+                cheapestProduct.getPrice(), cheapestProduct.getCurrency());
         System.out.println();
     }
 }
